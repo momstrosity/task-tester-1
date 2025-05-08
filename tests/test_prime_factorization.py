@@ -33,7 +33,7 @@ def test_error_handling():
 def test_large_number():
     """Test factorization of a relatively large number."""
     result = prime_factorization(123456)
-    assert result == [2, 2, 2, 2, 2, 2, 1929]
+    assert result == [2, 2, 2, 2, 2, 2, 643, 3]
     assert all(is_prime(x) for x in result)
 
 def is_prime(n):
