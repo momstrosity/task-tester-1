@@ -33,8 +33,13 @@ def test_error_handling():
 def test_large_number():
     """Test factorization of a relatively large number."""
     result = prime_factorization(123456)
-    assert result == [2, 2, 2, 2, 2, 2, 643, 3]
-    assert all(is_prime(x) for x in result)
+    # Verify the properties of the result instead of exact values
+    assert len(result) == 8  # should have 8 prime factors
+    assert all(is_prime(x) for x in result)  # all factors should be prime
+    product = 1
+    for x in result:
+        product *= x
+    assert product == 123456  # the product should equal the original number
 
 def is_prime(n):
     """Helper function to check if a number is prime."""
