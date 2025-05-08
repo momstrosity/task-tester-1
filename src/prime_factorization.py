@@ -15,6 +15,9 @@ def prime_factorization(n):
     if not isinstance(n, int):
         raise ValueError("Input must be an integer")
     
+    if n < 0:
+        raise ValueError("Input must be a non-negative integer")
+    
     if n < 2:
         return []
     
