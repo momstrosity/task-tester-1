@@ -1,46 +1,42 @@
 from typing import List
+from src.prime_checker import is_prime
 
 def prime_factorization(n: int) -> List[int]:
     """
-    Compute the prime factorization of a given positive integer.
+    Compute the prime factorization of a given number.
     
     Args:
-        n (int): The positive integer to factorize.
+        n (int): The number to factorize.
     
     Returns:
-        List[int]: A list of prime factors in ascending order.
+        List[int]: A list of prime factors.
     
     Raises:
-        ValueError: If the input is less than 1.
+        ValueError: If the input is less than 2.
+        TypeError: If the input is not an integer.
     """
-    # Validate input
+    # Handle edge cases
     if not isinstance(n, int):
         raise TypeError("Input must be an integer")
     
-    if n < 1:
-        raise ValueError("Input must be a positive integer")
-    
-    # Handle special cases
-    if n == 1:
+    if n < 2:
         return []
     
-    # Prime factorization algorithm
+    # List to store prime factors
     factors = []
     
-    # First, handle 2 as a special case to optimize odd number checking
+    # Handle 2 as a special case
     while n % 2 == 0:
         factors.append(2)
         n //= 2
     
-    # Check for odd prime factors
-    factor = 3
-    while factor * factor <= n:
-        while n % factor == 0:
-            factors.append(factor)
-            n //= factor
-        factor += 2
+    # Check odd factors up to sqrt(n)
+    for i in range(3, int(n**0.5) + 1, 2):
+        while n % i == 0 and is_prime(i):
+            factors.append(i)
+            n //= i
     
-    # If n is a prime number greater than 2
+    # If the remaining number is a prime greater than 2
     if n > 2:
         factors.append(n)
     
