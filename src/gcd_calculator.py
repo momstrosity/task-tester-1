@@ -1,91 +1,67 @@
-from typing import List, Union
-from math import sqrt
+from typing import List
+from src.prime_factorization import prime_factorization
 
-def get_prime_factors(n: int) -> List[int]:
-    """
-    Decompose a number into its prime factors.
-    
-    Args:
-        n (int): The number to factorize (must be a positive integer)
-    
-    Returns:
-        List[int]: A list of prime factors
-    
-    Raises:
-        ValueError: If input is less than 1
-    """
-    if n < 1:
-        raise ValueError("Input must be a positive integer")
-    
-    # Handle special cases
-    if n == 1:
-        return [1]
-    
-    factors = []
-    
-    # Check for 2 as a factor
-    while n % 2 == 0:
-        factors.append(2)
-        n //= 2
-    
-    # Check for odd prime factors
-    for i in range(3, int(sqrt(n)) + 1, 2):
-        while n % i == 0:
-            factors.append(i)
-            n //= i
-    
-    # If n is a prime greater than 2
-    if n > 2:
-        factors.append(n)
-    
-    return factors
-
-def gcd_prime_factors(a: int, b: int) -> int:
+def gcd_prime_factors(*numbers: int) -> int:
     """
     Calculate the Greatest Common Divisor (GCD) using prime factorization.
     
     Args:
-        a (int): First number 
-        b (int): Second number
+        *numbers (int): Variable number of integers to find GCD for.
     
     Returns:
-        int: The Greatest Common Divisor
+        int: The Greatest Common Divisor of the input numbers.
     
     Raises:
-        ValueError: If either input is less than 1
+        ValueError: If no arguments are provided.
+        TypeError: If any argument is not an integer.
     """
-    # Handle zero cases
-    if a == 0 and b == 0:
-        return 0
+    # Handle edge cases
+    if len(numbers) == 0:
+        raise ValueError("At least one number must be provided")
     
-    # Take absolute values to handle negative inputs
-    a, b = abs(a), abs(b)
+    # Validate inputs
+    for num in numbers:
+        if not isinstance(num, int):
+            raise TypeError("All arguments must be integers")
     
-    # If either number is 0, return the other number
-    if a == 0:
-        return b
-    if b == 0:
-        return a
+    # Handle special cases
+    if len(numbers) == 1:
+        return abs(numbers[0])
     
-    # Get prime factors for both numbers
-    a_factors = get_prime_factors(a)
-    b_factors = get_prime_factors(b)
+    # Calculate prime factorizations for each number
+    factorizations = [prime_factorization(abs(num)) for num in numbers]
+    
+    # Find the common prime factors
+    gcd_factors = []
+    
+    # Use the factorization of the first number as a reference
+    for prime in set(factorizations[0]):
+        # Find the minimum count of this prime factor across all numbers
+        min_count = min(
+            fact.count(prime) for fact in factorizations
+        )
+        
+        # Add the prime factor the minimum number of times
+        gcd_factors.extend([prime] * min_count)
     
     # Calculate GCD by multiplying common prime factors
-    gcd = 1
-    a_factor_counts = {}
-    b_factor_counts = {}
+    return multiply_factors(gcd_factors)
+
+def multiply_factors(factors: List[int]) -> int:
+    """
+    Multiply all factors together.
     
-    # Count occurrences of factors
-    for factor in a_factors:
-        a_factor_counts[factor] = a_factor_counts.get(factor, 0) + 1
-    for factor in b_factors:
-        b_factor_counts[factor] = b_factor_counts.get(factor, 0) + 1
+    Args:
+        factors (List[int]): List of prime factors.
     
-    # Find common factors with minimum count
-    for factor, count in a_factor_counts.items():
-        if factor in b_factor_counts:
-            common_count = min(count, b_factor_counts[factor])
-            gcd *= factor ** common_count
+    Returns:
+        int: Product of all factors.
+    """
+    if not factors:
+        return 1
     
-    return gcd
+    result = 1
+    for factor in factors:
+        result *= factor
+    
+    return result
