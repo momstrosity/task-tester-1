@@ -28,8 +28,11 @@ def gcd_prime_factors(*numbers: int) -> int:
     if len(numbers) == 1:
         return abs(numbers[0])
     
+    # Take absolute values of all inputs
+    numbers = [abs(num) for num in numbers]
+    
     # Handle zeros
-    non_zero_numbers = [abs(num) for num in numbers if num != 0]
+    non_zero_numbers = [num for num in numbers if num != 0]
     
     # If all numbers are zero, return 0
     if not non_zero_numbers:
