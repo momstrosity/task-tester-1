@@ -28,8 +28,19 @@ def gcd_prime_factors(*numbers: int) -> int:
     if len(numbers) == 1:
         return abs(numbers[0])
     
+    # Handle zeros
+    non_zero_numbers = [abs(num) for num in numbers if num != 0]
+    
+    # If all numbers are zero, return 0
+    if not non_zero_numbers:
+        return 0
+    
+    # If some numbers are zero, return the GCD of non-zero numbers
+    if len(non_zero_numbers) < len(numbers):
+        numbers = non_zero_numbers
+    
     # Calculate prime factorizations for each number
-    factorizations = [prime_factorization(abs(num)) for num in numbers]
+    factorizations = [prime_factorization(num) for num in numbers]
     
     # Find the common prime factors
     gcd_factors = []
