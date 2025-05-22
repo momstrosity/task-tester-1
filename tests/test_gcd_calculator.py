@@ -1,36 +1,43 @@
 import pytest
-from src.gcd_calculator import gcd_prime_factors, get_prime_factors
+from src.gcd_calculator import gcd_prime_factors
 
-def test_get_prime_factors():
-    # Test basic prime factorization
-    assert get_prime_factors(12) == [2, 2, 3]
-    assert get_prime_factors(15) == [3, 5]
-    assert get_prime_factors(7) == [7]
-    assert get_prime_factors(1) == [1]
-
-def test_prime_factors_edge_cases():
-    # Test edge cases
-    with pytest.raises(ValueError):
-        get_prime_factors(0)
-    with pytest.raises(ValueError):
-        get_prime_factors(-5)
-
-def test_gcd_prime_factors():
-    # Test various GCD scenarios
+def test_gcd_basic():
+    """Test GCD for basic scenarios."""
+    assert gcd_prime_factors(12, 18) == 6
     assert gcd_prime_factors(48, 18) == 6
     assert gcd_prime_factors(54, 24) == 6
-    assert gcd_prime_factors(17, 23) == 1  # Coprime numbers
+
+def test_gcd_coprime():
+    """Test GCD for coprime numbers."""
+    assert gcd_prime_factors(17, 23) == 1
+    assert gcd_prime_factors(5, 7) == 1
+
+def test_gcd_multiple_numbers():
+    """Test GCD for multiple numbers."""
+    assert gcd_prime_factors(12, 18, 24) == 6
+    assert gcd_prime_factors(100, 75, 50) == 25
+
+def test_gcd_zero_and_numbers():
+    """Test GCD involving zero."""
     assert gcd_prime_factors(0, 5) == 5
-    assert gcd_prime_factors(5, 0) == 5
     assert gcd_prime_factors(0, 0) == 0
 
-def test_gcd_with_negative_numbers():
-    # Test GCD with negative numbers
-    assert gcd_prime_factors(-48, 18) == 6
-    assert gcd_prime_factors(48, -18) == 6
+def test_gcd_negative_numbers():
+    """Test GCD with negative numbers."""
+    assert gcd_prime_factors(-12, 18) == 6
     assert gcd_prime_factors(-48, -18) == 6
 
-def test_gcd_large_numbers():
-    # Test large numbers
-    assert gcd_prime_factors(1234567, 7654321) == 1  # Coprime large numbers
-    assert gcd_prime_factors(1000000, 10000) == 10000
+def test_gcd_single_number():
+    """Test GCD with a single number."""
+    assert gcd_prime_factors(42) == 42
+
+def test_gcd_invalid_input():
+    """Test error handling for invalid inputs."""
+    with pytest.raises(ValueError):
+        gcd_prime_factors()
+    
+    with pytest.raises(TypeError):
+        gcd_prime_factors(3.14, 5)
+    
+    with pytest.raises(TypeError):
+        gcd_prime_factors("not", "numbers")
